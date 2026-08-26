@@ -1,6 +1,6 @@
 import Card from "@components/Card";
 import CardHeader from "@components/CardHeader";
-import { useAnnouncements, usePostAnnouncements } from "../../hooks";
+import { useAnnouncements, usePostAnnouncements } from "../hooks";
 import PostAnnButton from "./PostAnnButton";
 import PostAnnForm from "./PostAnnForm";
 import AnnContent from "./AnnContent";
@@ -11,7 +11,7 @@ import AnnContent from "./AnnContent";
   - Annoucement list
   */
 }
-export default function AnnouncementsWidget({ onExpand }: { onExpand?: () => void }) {
+export default function AnnouncementsWidget({ onExpand, onClose }: { onExpand?: () => void; onClose?: () => void }) {
   const { anns, pushAnns, openIds, toggleAnnouncementBody, deleteAnns } = useAnnouncements();
   const postAnnsForm = usePostAnnouncements();
 
@@ -33,6 +33,7 @@ export default function AnnouncementsWidget({ onExpand }: { onExpand?: () => voi
         title="Announcements"
         count={anns.length}
         onExpand={onExpand}
+        onClose={onClose}
         action={<PostAnnButton isFormOpen={postAnnsForm.composing} setFormOpen={postAnnsForm.setComposing} />}
       />
 

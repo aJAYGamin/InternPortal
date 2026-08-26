@@ -1,11 +1,13 @@
 import colors from "../styles/colors";
 import ExpandIcon from "./icons/ExpandIcon";
+import CloseIcon from "./icons/CloseIcon";
 
 interface CardHeaderProps {
   title: string;
   count?: number;
   action?: React.ReactNode;
   onExpand?: () => void;
+  onClose?: () => void;
 }
 
 {
@@ -16,7 +18,7 @@ interface CardHeaderProps {
   - onExpand: expand the card
   */
 }
-export default function CardHeader({ title, count, action, onExpand }: CardHeaderProps) {
+export default function CardHeader({ title, count, action, onExpand, onClose }: CardHeaderProps) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 20px 14px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -68,6 +70,28 @@ export default function CardHeader({ title, count, action, onExpand }: CardHeade
               e.currentTarget.style.borderColor = "#C8DCF0";
             }}>
             <ExpandIcon size={12} />
+          </button>
+        )}
+
+        {onClose && (
+          <button
+            onClick={onClose}
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: 8,
+              border: "1px solid #C8DCF0",
+              background: "transparent",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#1A1A1A",
+              transition: "background 0.1s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#FFFFFF")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>
+            <CloseIcon size={12} />
           </button>
         )}
       </div>

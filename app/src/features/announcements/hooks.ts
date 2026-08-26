@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { Announcement } from "./announcements/types";
-import { ANNOUNCEMENTS } from "./announcements/mockData";
+import type { Announcement } from "./types";
+import { ANNOUNCEMENTS } from "./mockData";
 
 {/** useAnnouncements controls announcement list and current expanded announcements */ }
 export function useAnnouncements() {

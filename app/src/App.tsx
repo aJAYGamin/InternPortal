@@ -4,13 +4,23 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 // import "./App.css";
 import AnnouncementsWidget from "./features/announcements/components/AnnouncementsWidget";
+import Modal from "@components/Modal";
+
+type ExpandedPanel = "todo" | "calendar" | "announcements" | "links" | "docs" | "dms" | "hours" | null;
 
 function App() {
   const [count, setCount] = useState(0);
+  const [expanded, setExpanded] = useState<ExpandedPanel>(null);
 
   return (
     <>
-      <AnnouncementsWidget />
+      <AnnouncementsWidget onExpand={() => setExpanded("announcements")} />
+
+      {expanded === "announcements" && (
+        <Modal onClose={() => setExpanded(null)}>
+          <AnnouncementsWidget onClose={() => setExpanded(null)} />
+        </Modal>
+      )}
       <section id="center">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
