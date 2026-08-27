@@ -1,9 +1,20 @@
 import Card from "@components/Card";
 import CardHeader from "@components/CardHeader";
-import { useAnnouncements, usePostAnnouncements } from "../hooks";
+import { usePostAnnouncements } from "../hooks";
 import PostAnnButton from "./PostAnnButton";
 import PostAnnForm from "./PostAnnForm";
 import AnnContent from "./AnnContent";
+import type { Announcement } from "../types";
+
+interface AnnouncementsWidgetProps {
+  anns: Announcement[];
+  pushAnn: (title: string, body: string, tag: string) => Announcement | null;
+  openIds: Set<number>;
+  toggleBody: (id: number) => void;
+  deleteAnn: (id: number) => void;
+  onExpand?: () => void;
+  onClose?: () => void;
+}
 
 {
   /** Renders announcement tabs, include:
@@ -11,14 +22,14 @@ import AnnContent from "./AnnContent";
   - Annoucement list
   */
 }
-export default function AnnouncementsWidget({ onExpand, onClose }: { onExpand?: () => void; onClose?: () => void }) {
-  const { anns, pushAnns, openIds, toggleAnnouncementBody, deleteAnns } = useAnnouncements();
+export default function AnnouncementsWidget(props: AnnouncementsWidgetProps) {
+  const { anns, pushAnn, openIds, toggleBody, deleteAnn, onExpand, onClose } = props;
   const postAnnsForm = usePostAnnouncements();
 
   function post() {
     const { title, body, tag } = postAnnsForm;
 
-    const newAnns = pushAnns(title, body, tag);
+    const newAnns = pushAnn(title, body, tag);
 
     // stop the post function when the new announcement is invalid
     if (!newAnns) return;
@@ -64,7 +75,7 @@ export default function AnnouncementsWidget({ onExpand, onClose }: { onExpand?: 
           </div>
         )}
         {anns.map((ann) => (
-          <AnnContent ann={ann} toggleAnnBody={toggleAnnouncementBody} deleteAnn={deleteAnns} openIds={openIds} />
+          <AnnContent ann={ann} toggleAnnBody={toggleBody} deleteAnn={deleteAnn} openIds={openIds} />
         ))}
       </div>
     </Card>

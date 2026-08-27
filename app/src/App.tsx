@@ -5,20 +5,36 @@ import viteLogo from "./assets/vite.svg";
 // import "./App.css";
 import AnnouncementsWidget from "./features/announcements/components/AnnouncementsWidget";
 import Modal from "@components/Modal";
+import { useAnnouncements } from "./features/announcements/hooks";
 
 type ExpandedPanel = "todo" | "calendar" | "announcements" | "links" | "docs" | "dms" | "hours" | null;
 
 function App() {
   const [count, setCount] = useState(0);
   const [expanded, setExpanded] = useState<ExpandedPanel>(null);
+  const { anns, pushAnn, openIds, toggleBody, deleteAnn } = useAnnouncements();
 
   return (
     <>
-      <AnnouncementsWidget onExpand={() => setExpanded("announcements")} />
+      <AnnouncementsWidget
+        onExpand={() => setExpanded("announcements")}
+        anns={anns}
+        pushAnn={pushAnn}
+        openIds={openIds}
+        toggleBody={toggleBody}
+        deleteAnn={deleteAnn}
+      />
 
       {expanded === "announcements" && (
         <Modal onClose={() => setExpanded(null)}>
-          <AnnouncementsWidget onClose={() => setExpanded(null)} />
+          <AnnouncementsWidget
+            onClose={() => setExpanded(null)}
+            anns={anns}
+            pushAnn={pushAnn}
+            openIds={openIds}
+            toggleBody={toggleBody}
+            deleteAnn={deleteAnn}
+          />
         </Modal>
       )}
       <section id="center">

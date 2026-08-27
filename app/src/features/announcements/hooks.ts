@@ -11,7 +11,7 @@ export function useAnnouncements() {
    * - create new announcement
    * - add it to announcement list
    */
-  function pushAnns(title: string, body: string, tag: string): Announcement | null {
+  function pushAnn(title: string, body: string, tag: string): Announcement | null {
     if (!title.trim()) return null;
 
     const now = new Date();
@@ -26,7 +26,7 @@ export function useAnnouncements() {
   }
 
   {/** Toggle the display of announcement's body */ }
-  function toggleAnnouncementBody(id: number) {
+  function toggleBody(id: number) {
     setOpenIds((s) => {
       const n = new Set(s);
       n.has(id) ? n.delete(id) : n.add(id);
@@ -35,7 +35,7 @@ export function useAnnouncements() {
   }
 
   {/** Remove the announcement from the list */ }
-  function deleteAnns(id: number) {
+  function deleteAnn(id: number) {
     setAnns((a) => a.filter((x) => x.id !== id));
     setOpenIds((s) => {
       const n = new Set(s);
@@ -44,7 +44,7 @@ export function useAnnouncements() {
     });
   }
 
-  return { anns, openIds, pushAnns, toggleAnnouncementBody, deleteAnns }
+  return { anns, openIds, pushAnn, toggleBody, deleteAnn }
 }
 
 {/* usePostAnnouncements controls the form's input */ }
