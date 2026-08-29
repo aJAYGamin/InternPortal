@@ -4,8 +4,10 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 // import "./App.css";
 import AnnouncementsWidget from "./features/announcements/components/AnnouncementsWidget";
+import HoursLogWidget from "./features/hoursLog/components/HoursLogWidget";
 import Modal from "@components/Modal";
 import { useAnnouncements } from "./features/announcements/hooks";
+import { useHoursEntries } from "./features/hoursLog/hooks";
 
 type ExpandedPanel = "todo" | "calendar" | "announcements" | "links" | "docs" | "dms" | "hours" | null;
 
@@ -13,17 +15,28 @@ function App() {
   const [count, setCount] = useState(0);
   const [expanded, setExpanded] = useState<ExpandedPanel>(null);
   const { anns, pushAnn, openIds, toggleBody, deleteAnn } = useAnnouncements();
+  const { entries, addEntries } = useHoursEntries();
 
   return (
     <>
-      <AnnouncementsWidget
-        onExpand={() => setExpanded("announcements")}
-        anns={anns}
-        pushAnn={pushAnn}
-        openIds={openIds}
-        toggleBody={toggleBody}
-        deleteAnn={deleteAnn}
-      />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 16, alignItems: "start" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <AnnouncementsWidget
+            onExpand={() => setExpanded("announcements")}
+            anns={anns}
+            pushAnn={pushAnn}
+            openIds={openIds}
+            toggleBody={toggleBody}
+            deleteAnn={deleteAnn}
+          />
+          <HoursLogWidget entries={entries} addEntries={addEntries} onExpand={() => setExpanded("hours")} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* <CalendarWidget onExpand={() => setExpanded("calendar")} />
+            <DmsWidget onExpand={() => setExpanded("dms")} />
+            <QuickDocsWidget onExpand={() => setExpanded("docs")} /> */}
+        </div>
+      </div>
 
       {expanded === "announcements" && (
         <Modal onClose={() => setExpanded(null)}>
@@ -35,6 +48,12 @@ function App() {
             toggleBody={toggleBody}
             deleteAnn={deleteAnn}
           />
+        </Modal>
+      )}
+
+      {expanded === "hours" && (
+        <Modal onClose={() => setExpanded(null)}>
+          <HoursLogWidget entries={entries} addEntries={addEntries} onClose={() => setExpanded(null)} />
         </Modal>
       )}
       <section id="center">
