@@ -25,12 +25,15 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
+      "@icons/*": [
+        "./src/components/icons/*"
+      ],
       "@components/*": [
         "./src/components/*"
       ],
       "@styles/*": [
         "./src/styles/*"
-      ]
+      ],
     }
   },
   "include": [

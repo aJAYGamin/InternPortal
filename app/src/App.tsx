@@ -2,12 +2,15 @@ import { useState } from "react";
 import heroImg from "./assets/hero.png";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
-// import "./App.css";
+import "./App.css";
 import AnnouncementsWidget from "./features/announcements/components/AnnouncementsWidget";
 import HoursLogWidget from "./features/hoursLog/components/HoursLogWidget";
 import Modal from "@components/Modal";
 import { useAnnouncements } from "./features/announcements/hooks";
 import { useHoursEntries } from "./features/hoursLog/hooks";
+import TodoWidget from "./features/todo/components/TodoWidget";
+import { INITIAL_TODOS } from "./features/todo/mockData";
+import { useTodos } from "./features/todo/hooks";
 
 type ExpandedPanel = "todo" | "calendar" | "announcements" | "links" | "docs" | "dms" | "hours" | null;
 
@@ -16,6 +19,7 @@ function App() {
   const [expanded, setExpanded] = useState<ExpandedPanel>(null);
   const { anns, pushAnn, openIds, toggleBody, deleteAnn } = useAnnouncements();
   const { entries, addEntries } = useHoursEntries();
+  const todoStore = useTodos(INITIAL_TODOS);
 
   return (
     <>
@@ -29,6 +33,7 @@ function App() {
             toggleBody={toggleBody}
             deleteAnn={deleteAnn}
           />
+          <TodoWidget todoStore={todoStore} onExpand={() => setExpanded("todo")} />
           <HoursLogWidget entries={entries} addEntries={addEntries} onExpand={() => setExpanded("hours")} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -54,6 +59,12 @@ function App() {
       {expanded === "hours" && (
         <Modal onClose={() => setExpanded(null)}>
           <HoursLogWidget entries={entries} addEntries={addEntries} onClose={() => setExpanded(null)} />
+        </Modal>
+      )}
+
+      {expanded === "todo" && (
+        <Modal onClose={() => setExpanded(null)}>
+          <TodoWidget todoStore={todoStore} onClose={() => setExpanded(null)} />
         </Modal>
       )}
       <section id="center">
