@@ -14,6 +14,9 @@ import { useTodos } from "./features/todo/hooks";
 import CalendarWidget from "./features/calendar/components/CalendarWidget";
 import { useCalendarEvents } from "./features/calendar/hooks";
 import { CALENDAR_EVENTS } from "./features/calendar/mockData";
+import QuickDocsWidget from "./features/quickDocs/components/QuickDocsWidget";
+import { useDocs } from "./features/quickDocs/hooks";
+import { QUICK_DOCS } from "./features/quickDocs/mockData";
 
 type ExpandedPanel = "todo" | "calendar" | "announcements" | "links" | "docs" | "dms" | "hours" | null;
 
@@ -24,6 +27,7 @@ function App() {
   const { entries, addEntries } = useHoursEntries();
   const todoStore = useTodos(INITIAL_TODOS);
   const calendarStore = useCalendarEvents(CALENDAR_EVENTS);
+  const docStore = useDocs(QUICK_DOCS);
 
   return (
     <>
@@ -43,6 +47,7 @@ function App() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <CalendarWidget calendarStore={calendarStore} onExpand={() => setExpanded("calendar")} />
           {/* <DmsWidget onExpand={() => setExpanded("dms")} /> */}
+          <QuickDocsWidget docStore={docStore} onExpand={() => setExpanded("docs")} />
         </div>
       </div>
 
@@ -68,6 +73,12 @@ function App() {
       {expanded === "calendar" && (
         <Modal onClose={() => setExpanded(null)}>
           <CalendarWidget calendarStore={calendarStore} onClose={() => setExpanded(null)} />
+        </Modal>
+      )}
+
+      {expanded === "docs" && (
+        <Modal onClose={() => setExpanded(null)}>
+          <QuickDocsWidget docStore={docStore} onClose={() => setExpanded(null)} />
         </Modal>
       )}
 
