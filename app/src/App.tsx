@@ -17,6 +17,8 @@ import { CALENDAR_EVENTS } from "./features/calendar/mockData";
 import QuickDocsWidget from "./features/quickDocs/components/QuickDocsWidget";
 import { useDocs } from "./features/quickDocs/hooks";
 import { QUICK_DOCS } from "./features/quickDocs/mockData";
+import QuickLinksNav from "./features/quickLinks/components/QuickLinksNav";
+import QuickLinksWidget from "./features/quickLinks/components/QuickLinksWidget";
 
 type ExpandedPanel = "todo" | "calendar" | "announcements" | "links" | "docs" | "dms" | "hours" | null;
 
@@ -31,6 +33,8 @@ function App() {
 
   return (
     <>
+      <QuickLinksNav onExpand={() => setExpanded("links")} />
+
       <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 16, alignItems: "start" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <AnnouncementsWidget
@@ -67,6 +71,12 @@ function App() {
       {expanded === "hours" && (
         <Modal onClose={() => setExpanded(null)}>
           <HoursLogWidget entries={entries} addEntries={addEntries} onClose={() => setExpanded(null)} />
+        </Modal>
+      )}
+
+      {expanded === "links" && (
+        <Modal onClose={() => setExpanded(null)}>
+          <QuickLinksWidget onClose={() => setExpanded(null)} />
         </Modal>
       )}
 
