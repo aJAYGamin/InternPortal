@@ -1,7 +1,4 @@
 import { useState } from "react";
-import heroImg from "./assets/hero.png";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
 import "./App.css";
 import AnnouncementsWidget from "./features/announcements/components/AnnouncementsWidget";
 import HoursLogWidget from "./features/hoursLog/components/HoursLogWidget";
@@ -22,11 +19,12 @@ import { useDocs } from "./features/quickDocs/hooks";
 import { QUICK_DOCS } from "./features/quickDocs/mockData";
 import QuickLinksNav from "./features/quickLinks/components/QuickLinksNav";
 import QuickLinksWidget from "./features/quickLinks/components/QuickLinksWidget";
+import colors from "@styles/colors";
+import Avatar from "@icons/Avatar";
 
 type ExpandedPanel = "todo" | "calendar" | "announcements" | "links" | "docs" | "dms" | "hours" | null;
 
 function App() {
-  const [count, setCount] = useState(0);
   const [expanded, setExpanded] = useState<ExpandedPanel>(null);
   const { anns, pushAnn, openIds, toggleBody, deleteAnn } = useAnnouncements();
   const { entries, addEntries } = useHoursEntries();
@@ -46,46 +44,130 @@ function App() {
   const calendarStore = useCalendarEvents(CALENDAR_EVENTS);
   const docStore = useDocs(QUICK_DOCS);
 
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const dateStr = now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+
   return (
-    <>
-      <QuickLinksNav onExpand={() => setExpanded("links")} />
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 16, alignItems: "start" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <AnnouncementsWidget
-            onExpand={() => setExpanded("announcements")}
-            anns={anns}
-            pushAnn={pushAnn}
-            openIds={openIds}
-            toggleBody={toggleBody}
-            deleteAnn={deleteAnn}
-          />
-          <TodoWidget todoStore={todoStore} onExpand={() => setExpanded("todo")} />
-          <HoursLogWidget entries={entries} addEntries={addEntries} onExpand={() => setExpanded("hours")} />
+    <div style={{ minHeight: "100vh", background: "#FFFFFF" }}>
+      {/* Top bar */}
+      <header
+        style={{
+          background: "#fff",
+          borderBottom: "1px solid #C8DCF0",
+          padding: "0 32px",
+          height: 60,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+        }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div
+            style={{
+              fontFamily: "Helvetica, Arial, sans-serif",
+              fontSize: 12,
+              color: "#1A1A1A",
+              letterSpacing: "0.06em",
+            }}>
+            {dateStr.toUpperCase()}
+          </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <CalendarWidget calendarStore={calendarStore} onExpand={() => setExpanded("calendar")} />
-          <QuickDocsWidget docStore={docStore} onExpand={() => setExpanded("docs")} />
-          <DmsWidget
-            onExpand={() => setExpanded("dms")}
-            fullscreen={false}
-            active={active}
-            activeId={activeId}
-            convoName={convoName}
-            openConvo={(id: string) => {
-              openConvo(id);
-              setExpanded("dms");
-            }}
-            otherUser={otherUser}
-            sendMessage={sendMessage}
-            sortedConvos={sortedConvos}
-            togglePin={togglePin}
-            toggleReaction={toggleReaction}
-            totalUnread={totalUnread}
-          />
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 9,
+              padding: "5px 10px",
+              borderRadius: 10,
+              background: colors.MAGENTA_LIGHT,
+            }}>
+            <Avatar name={"Jordan Lee"} size={28} />
+            <div>
+              <div
+                style={{
+                  fontFamily: "Helvetica, Arial, sans-serif",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  color: "#1A1A1A",
+                  lineHeight: 1.2,
+                }}>
+                {"Jordan Lee"}
+              </div>
+              <div
+                style={{
+                  fontFamily: "Helvetica, Arial, sans-serif",
+                  fontSize: 12,
+                  color: colors.MAGENTA,
+                  letterSpacing: "0.04em",
+                }}>
+                ENG · INTERN
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
 
+      <main style={{ padding: "28px 32px", maxWidth: 1280, margin: "0 auto" }}>
+        {/* Greeting */}
+        <div style={{ marginBottom: 24 }}>
+          <h1
+            style={{
+              fontFamily: "Helvetica, Arial, sans-serif",
+              fontWeight: 800,
+              fontSize: 26,
+              color: "#1A1A1A",
+              margin: 0,
+              lineHeight: 1.1,
+            }}>
+            {greeting}, Jordan 👋
+          </h1>
+          <p style={{ fontFamily: "Helvetica, Arial, sans-serif", fontSize: 16, color: "#1A1A1A", margin: "5px 0 0" }}>
+            {"Here's what's happening in your internship portal today."}
+          </p>
+        </div>
+        <QuickLinksNav onExpand={() => setExpanded("links")} />
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 16, alignItems: "start" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <AnnouncementsWidget
+              onExpand={() => setExpanded("announcements")}
+              anns={anns}
+              pushAnn={pushAnn}
+              openIds={openIds}
+              toggleBody={toggleBody}
+              deleteAnn={deleteAnn}
+            />
+            <TodoWidget todoStore={todoStore} onExpand={() => setExpanded("todo")} />
+            <HoursLogWidget entries={entries} addEntries={addEntries} onExpand={() => setExpanded("hours")} />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <CalendarWidget calendarStore={calendarStore} onExpand={() => setExpanded("calendar")} />
+            <DmsWidget
+              onExpand={() => setExpanded("dms")}
+              fullscreen={false}
+              active={active}
+              activeId={activeId}
+              convoName={convoName}
+              openConvo={(id: string) => {
+                openConvo(id);
+                setExpanded("dms");
+              }}
+              otherUser={otherUser}
+              sendMessage={sendMessage}
+              sortedConvos={sortedConvos}
+              togglePin={togglePin}
+              toggleReaction={toggleReaction}
+              totalUnread={totalUnread}
+            />
+            <QuickDocsWidget docStore={docStore} onExpand={() => setExpanded("docs")} />
+          </div>
+        </div>
+      </main>
       {expanded === "announcements" && (
         <Modal onClose={() => setExpanded(null)}>
           <AnnouncementsWidget
@@ -146,93 +228,7 @@ function App() {
           />
         </Modal>
       )}
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button type="button" className="counter" onClick={() => setCount((count) => count + 1)}>
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </div>
   );
 }
 
