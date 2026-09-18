@@ -8,8 +8,11 @@ import HoursLogWidget from "./features/hoursLog/components/HoursLogWidget";
 import Modal from "@components/Modal";
 import { useAnnouncements } from "./features/announcements/hooks";
 import { useHoursEntries } from "./features/hoursLog/hooks";
+import { useDmConversations } from "./features/dms/hooks/useConversation";
 import TodoWidget from "./features/todo/components/TodoWidget";
+import DmsWidget from "./features/dms/components/DmsWidget";
 import { INITIAL_TODOS } from "./features/todo/mockData";
+import { INITIAL_DMS, ME_ID } from "./features/dms/mockData";
 import { useTodos } from "./features/todo/hooks";
 import CalendarWidget from "./features/calendar/components/CalendarWidget";
 import { useCalendarEvents } from "./features/calendar/hooks";
@@ -27,6 +30,18 @@ function App() {
   const [expanded, setExpanded] = useState<ExpandedPanel>(null);
   const { anns, pushAnn, openIds, toggleBody, deleteAnn } = useAnnouncements();
   const { entries, addEntries } = useHoursEntries();
+  const {
+    activeId,
+    otherUser,
+    convoName,
+    openConvo,
+    sendMessage,
+    sortedConvos,
+    toggleReaction,
+    active,
+    totalUnread,
+    togglePin,
+  } = useDmConversations(ME_ID, INITIAL_DMS, null);
   const todoStore = useTodos(INITIAL_TODOS);
   const calendarStore = useCalendarEvents(CALENDAR_EVENTS);
   const docStore = useDocs(QUICK_DOCS);
@@ -50,8 +65,24 @@ function App() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <CalendarWidget calendarStore={calendarStore} onExpand={() => setExpanded("calendar")} />
-          {/* <DmsWidget onExpand={() => setExpanded("dms")} /> */}
           <QuickDocsWidget docStore={docStore} onExpand={() => setExpanded("docs")} />
+          <DmsWidget
+            onExpand={() => setExpanded("dms")}
+            fullscreen={false}
+            active={active}
+            activeId={activeId}
+            convoName={convoName}
+            openConvo={(id: string) => {
+              openConvo(id);
+              setExpanded("dms");
+            }}
+            otherUser={otherUser}
+            sendMessage={sendMessage}
+            sortedConvos={sortedConvos}
+            togglePin={togglePin}
+            toggleReaction={toggleReaction}
+            totalUnread={totalUnread}
+          />
         </div>
       </div>
 
@@ -95,6 +126,24 @@ function App() {
       {expanded === "todo" && (
         <Modal onClose={() => setExpanded(null)}>
           <TodoWidget todoStore={todoStore} onClose={() => setExpanded(null)} />
+        </Modal>
+      )}
+
+      {expanded === "dms" && (
+        <Modal onClose={() => setExpanded(null)}>
+          <DmsWidget
+            fullscreen={true}
+            active={active}
+            activeId={activeId}
+            convoName={convoName}
+            openConvo={openConvo}
+            otherUser={otherUser}
+            sendMessage={sendMessage}
+            sortedConvos={sortedConvos}
+            togglePin={togglePin}
+            toggleReaction={toggleReaction}
+            totalUnread={totalUnread}
+          />
         </Modal>
       )}
       <section id="center">
