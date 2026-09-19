@@ -3,7 +3,7 @@ import MessageReactions from "./MessageReactions";
 import MessageHoverActions from "./MessageHoverAction";
 import Avatar from "@icons/Avatar";
 
-import type { DmMessage, MessageStatus } from "../types";
+import type { DmMessage } from "../types";
 import { DM_USERS } from "../mockData";
 
 import colors from "@styles/colors";
@@ -107,6 +107,7 @@ export function MessageBubble({
   );
 }
 
+// Re-add `MessageStatus` to the type import above when this is uncommented.
 // export function StatusTick({ status }: { status: MessageStatus }) {
 //   if (status === "sending") return <span style={{ fontSize: 10, color: "#aaa" }}>○</span>;
 //   if (status === "sent") return <span style={{ fontSize: 10, color: "#aaa" }}>✓</span>;
